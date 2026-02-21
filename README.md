@@ -33,13 +33,13 @@ go get github.com/IceTweak/hyperacc
 - `github.com/hyperledger/fabric-protos-go-apiv2`
 
 ## Main Features
-- ✅ Role-based access check (role attribute)
-- ✅ MSPID check
-- ✅ Organizational Unit (OU) check
-- ✅ Support for administrators and clients based on `hf.Type`
-- ✅ Rule combinations (AND/OR/NOT)
-- ✅ Custom rules
-- ✅ Simple and intuitive API
+- [x] Role-based access check (role attribute)
+- [x] MSPID check
+- [x] Organizational Unit (OU) check
+- [x] Support for administrators and clients based on `hf.Type`
+- [x] Rule combinations (AND/OR/NOT)
+- [x] Custom rules
+- [x] Simple and intuitive API
 
 
 ## Quick Start
