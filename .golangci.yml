@@ -1,0 +1,103 @@
+version: "2" # Configuration file format version (v2 — for golangci-lint 2.x)
+
+run: # Linter run parameters
+  timeout: 5m # Maximum analysis execution time
+  relative-path-mode: gomod # File paths are interpreted relative to the go module root
+  issues-exit-code: 1 # Exit code = 1 if errors are found (useful for CI)
+  tests: true # Also analyze _test.go files
+  modules-download-mode: readonly # Do not allow dependency downloads during analysis (safer and faster on CI)
+
+output: # Linting results output settings
+  formats:
+    text: # Terminal output format
+      print-linter-name: true # Show linter name next to each message
+      print-issued-lines: true # Show code line where the issue was found
+      colors: true # Use colored output (for better readability)
+
+issues: # General settings for issue handling
+  max-issues-per-linter: 0 # No limit on number of errors from a single linter
+  max-same-issues: 0 # No limit on number of identical errors
+  uniq-by-line: true # Display at most one error per line (avoids spam from different linters on the same line)
+
+linters: # List of active and disabled linters
+  default: standard # Use golangci-lint standard linter set
+  enable: # Explicitly enabled additional linters
+    - errcheck # Checks that errors are not ignored
+    - staticcheck # Deep static analysis (includes gosimple, stylecheck)
+    - govet # Built-in Go analysis tool (catches potential bugs)
+    - gocritic # Advanced rule set for improving code quality
+    - revive # Checks code style, formatting, naming
+    - unused # Finds unused variables, types, functions
+    - gosec # Security vulnerability and unsafe practice checks
+    - depguard # Forbids import of specified packages (dependency control)
+    - bodyclose # Checks that `resp.Body` is closed for HTTP requests
+    - asciicheck # Warns about non-ASCII characters in code
+    - cyclop # Controls cyclomatic complexity of functions
+    - ineffassign # Detects unused assignments
+    - unparam # Finds unused function parameters
+    - errorlint # Recommends using `errors.Is` / `errors.As` instead of direct comparisons
+    - errname # Checks error variable/type names (should contain "Err")
+    - forbidigo # Forbids certain calls or constructs by regex patterns
+    - contextcheck # Checks that `context.Context` is passed to methods/functions
+    - containedctx # Warns if `context.Context` is stored in a struct (bad practice)
+  disable: # Linters that are intentionally disabled
+    - gocyclo # Old complexity linter (replaced by cyclop)
+    - lll # Line length check (often noisy and annoying)
+    - dupl # Finds duplicated code fragments
+
+  exclusions: # Analysis exclusions
+    generated: strict # Ignore generated files (by "// Code generated ... DO NOT EDIT.")
+    rules: # Local exclusions by path/file/linters
+      - path: _test\.go # For all tests:
+        linters:
+          - cyclop # Don't check test complexity
+          - dupl # Don't check duplication in tests
+          - gosec # Don't search for vulnerabilities in tests
+
+  settings: # Individual settings for specific linters
+    gosec:
+      # Enable all rules, including experimental ones
+      config:
+        global:
+          audit: true # Activate all security rules
+          show-ignored: true # Show ignored issues in comments
+        severity: "medium" # Minimum issue importance, high/medium/low
+        confidence: "medium" # Minimum confidence level, high/medium/low
+
+    cyclop:
+      max-complexity: 20 # Allowed function complexity (more than 10, but not too strict)
+
+    depguard:
+      rules:
+        main:
+          deny:
+            - pkg: io/ioutil # Forbid using deprecated package
+              desc: "Usage of deprecated package io/ioutil is forbidden (replace calls with equivalents from os/io packages)"
+
+    revive:
+      severity: warning # Revive violations will be warnings, not errors
+
+    forbidigo:
+      exclude-godoc-examples: true # Don't apply bans to Godoc examples
+      analyze-types: true # Search for bans in types/constants too, not just functions
+      forbid: # List of forbidden patterns
+        - pattern: '^fmt\.Print.*$' # Forbid using fmt.Print*, fmt.Println, etc.
+          msg: "Direct use of fmt.Print* for logging is forbidden (use structured logger instead)"
+        - pattern: '^time\.Sleep$' # Forbid using time.Sleep
+          msg: "Using time.Sleep in production code is forbidden (use timers/context instead)"
+        - pattern: '^http\.DefaultClient$' # Forbid using unsafe http.DefaultClient
+          msg: "Don't use http.DefaultClient (no timeouts); create *http.Client with timeouts"
+
+formatters: # Code formatters (style checking)
+  enable:
+    - gofumpt # Strict version of gofmt with additional rules
+    - gci # Import formatter (flexible alternative to goimports)
+  settings:
+    gofumpt:
+      extra-rules: true # Enable additional strict rules (e.g., remove extra blank lines)
+    gci:
+      sections: # Import grouping order
+        - Standard # Standard library
+        - Default # Third-party dependencies
+        - Prefix(github.com/IceTweak/hyperacc) # Local project imports
+      no-inline-comments: false # Allow comments after imports (true — will forbid)

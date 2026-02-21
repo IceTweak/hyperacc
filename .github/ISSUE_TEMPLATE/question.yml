@@ -1,0 +1,91 @@
+name: Question / Support
+description: Ask a question or get help
+title: "[Question]: "
+labels: ["question"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for asking a question! We're here to help.
+
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: What is your question?
+      placeholder: |
+        Please provide a clear and concise description of your question.
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Provide any relevant context about your question
+      placeholder: |
+        What are you trying to accomplish? What have you tried so far?
+    validations:
+      required: true
+
+  - type: textarea
+    id: code
+    attributes:
+      label: Code Example
+      description: If applicable, share relevant code snippets
+      placeholder: |
+        ```go
+        // Your code here
+        ```
+      render: go
+
+  - type: dropdown
+    id: version
+    attributes:
+      label: Go Version
+      description: What version of Go are you using?
+      options:
+        - "1.21"
+        - "1.22"
+        - "1.23"
+        - "1.24"
+        - "Other"
+    validations:
+      required: true
+
+  - type: input
+    id: hyperacc-version
+    attributes:
+      label: hyperacc Version
+      description: What version of hyperacc are you using? (e.g., v1.0.0)
+      placeholder: v1.0.0
+
+  - type: textarea
+    id: documentation
+    attributes:
+      label: Documentation Checked
+      description: Which parts of the documentation have you already checked?
+      placeholder: |
+        - [ ] README.md
+        - [ ] API Reference
+        - [ ] Examples
+        - [ ] Other (please specify)
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Context
+      description: Add any other context or screenshots about your question here
+      placeholder: Any additional information that might be helpful...
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Checklist
+      options:
+        - label: I have searched existing issues and discussions
+          required: true
+        - label: I have checked the documentation
+          required: false
+        - label: I have provided a minimal example if applicable
+          required: false

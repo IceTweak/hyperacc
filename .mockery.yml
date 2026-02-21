@@ -1,0 +1,18 @@
+# Global settings (apply to all packages unless overridden)
+filename: "mock_{{.InterfaceName}}.go" # File name template
+formatter: goimports
+dir: "mocks" # Where to place mocks (relative to package)
+pkgname: "mocks" # Package name for generated mocks
+template: testify
+
+packages:
+  github.com/hyperledger/fabric-contract-api-go/v2/contractapi:
+    interfaces:
+      TransactionContextInterface:
+  github.com/hyperledger/fabric-chaincode-go/v2/pkg/cid:
+    interfaces:
+      ChaincodeStubInterface:
+      ClientIdentity:
+  github.com/IceTweak/hyperacc:
+    interfaces:
+      Rule:

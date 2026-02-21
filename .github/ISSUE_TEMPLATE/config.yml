@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Discussions
+    url: https://github.com/IceTweak/hyperacc/discussions
+    about: Ask questions and discuss ideas with the community
+  - name: 📖 Documentation
+    url: https://pkg.go.dev/github.com/IceTweak/hyperacc
+    about: Check the API documentation and examples
