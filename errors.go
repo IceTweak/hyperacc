@@ -32,5 +32,6 @@ func WrapAccessError(reason string, cause error) *AccessError {
 
 func AsAccessError(err error) (*AccessError, bool) {
 	var e *AccessError
-	return e, errors.As(err, &e)
+	ok := errors.As(err, &e)
+	return e, ok
 }
