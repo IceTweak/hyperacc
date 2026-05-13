@@ -594,3 +594,98 @@ func TestLogAccessDenied(t *testing.T) {
 		})
 	}
 }
+
+func TestAnyAttributeRule_Check(t *testing.T) {
+	tests := []struct {
+		name        string
+		setup       func() (*mocks.MockTransactionContextInterface, *mocks.MockClientIdentity)
+		attrName    string
+		attrValues  []string
+		expectError bool
+	}{
+		{
+			name: "attribute matches one of values - access granted",
+			setup: func() (*mocks.MockTransactionContextInterface, *mocks.MockClientIdentity) {
+				ctxMock, identityMock := setupMocks()
+				identityMock.On("GetAttributeValue", "department").Return("IT", true, nil)
+				return ctxMock, identityMock
+			},
+			attrName:    "department",
+			attrValues:  []string{"IT", "Engineering"},
+			expectError: false,
+		},
+		{
+			name: "attribute matches second value - access granted",
+			setup: func() (*mocks.MockTransactionContextInterface, *mocks.MockClientIdentity) {
+				ctxMock, identityMock := setupMocks()
+				identityMock.On("GetAttributeValue", "department").Return("Engineering", true, nil)
+				return ctxMock, identityMock
+			},
+			attrName:    "department",
+			attrValues:  []string{"IT", "Engineering"},
+			expectError: false,
+		},
+		{
+			name: "attribute does not match any value - access denied",
+			setup: func() (*mocks.MockTransactionContextInterface, *mocks.MockClientIdentity) {
+				ctxMock, identityMock := setupMocks()
+				identityMock.On("GetAttributeValue", "department").Return("Sales", true, nil)
+				return ctxMock, identityMock
+			},
+			attrName:    "department",
+			attrValues:  []string{"IT", "Engineering"},
+			expectError: true,
+		},
+		{
+			name: "attribute not found - access denied",
+			setup: func() (*mocks.MockTransactionContextInterface, *mocks.MockClientIdentity) {
+				ctxMock, identityMock := setupMocks()
+				identityMock.On("GetAttributeValue", "department").Return("", false, nil)
+				return ctxMock, identityMock
+			},
+			attrName:    "department",
+			attrValues:  []string{"IT"},
+			expectError: true,
+		},
+		{
+			name: "single value matches - access granted",
+			setup: func() (*mocks.MockTransactionContextInterface, *mocks.MockClientIdentity) {
+				ctxMock, identityMock := setupMocks()
+				identityMock.On("GetAttributeValue", "level").Return("senior", true, nil)
+				return ctxMock, identityMock
+			},
+			attrName:    "level",
+			attrValues:  []string{"senior"},
+			expectError: false,
+		},
+		{
+			name: "error getting attribute",
+			setup: func() (*mocks.MockTransactionContextInterface, *mocks.MockClientIdentity) {
+				ctxMock, identityMock := setupMocks()
+				identityMock.On("GetAttributeValue", "department").Return("", false, errors.New("failed to get attribute"))
+				return ctxMock, identityMock
+			},
+			attrName:    "department",
+			attrValues:  []string{"IT"},
+			expectError: true,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			ctxMock, identityMock := tt.setup()
+
+			rule := RequireAnyAttribute(tt.attrName, tt.attrValues...)
+			err := rule.Check(ctxMock)
+
+			if tt.expectError {
+				assert.Error(t, err)
+			} else {
+				assert.NoError(t, err)
+			}
+
+			ctxMock.AssertExpectations(t)
+			identityMock.AssertExpectations(t)
+		})
+	}
+}

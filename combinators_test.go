@@ -263,3 +263,37 @@ func TestNotRule_Check(t *testing.T) {
 		})
 	}
 }
+
+func TestAll_IsAliasForAnd(t *testing.T) {
+	ctxMock := new(mocks.MockTransactionContextInterface)
+	rule1 := new(mocks.MockRule)
+	rule2 := new(mocks.MockRule)
+	rule1.On("Check", ctxMock).Return(nil)
+	rule2.On("Check", ctxMock).Return(nil)
+
+	allRule := All(rule1, rule2)
+	andRule := And(rule1, rule2)
+
+	allErr := allRule.Check(ctxMock)
+	andErr := andRule.Check(ctxMock)
+
+	assert.NoError(t, allErr)
+	assert.Equal(t, andErr, allErr)
+}
+
+func TestAny_IsAliasForOr(t *testing.T) {
+	ctxMock := new(mocks.MockTransactionContextInterface)
+	rule1 := new(mocks.MockRule)
+	rule2 := new(mocks.MockRule)
+	rule1.On("Check", ctxMock).Return(nil)
+	rule2.On("Check", ctxMock).Maybe()
+
+	anyRule := Any(rule1, rule2)
+	orRule := Or(rule1, rule2)
+
+	anyErr := anyRule.Check(ctxMock)
+	orErr := orRule.Check(ctxMock)
+
+	assert.NoError(t, anyErr)
+	assert.Equal(t, orErr, anyErr)
+}

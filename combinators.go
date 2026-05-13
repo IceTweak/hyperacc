@@ -81,3 +81,9 @@ func (r *NotRule) Check(ctx contractapi.TransactionContextInterface) error {
 	}
 	return nil
 }
+
+// All is an alias for And that reads more naturally in policy declarations.
+func All(rules ...Rule) *AndRule { return And(rules...) }
+
+// Any is an alias for Or that reads more naturally in policy declarations.
+func Any(rules ...Rule) *OrRule { return Or(rules...) }
