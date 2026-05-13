@@ -271,7 +271,6 @@ func TestAll_IsAliasForAnd(t *testing.T) {
 	rule1.On("Check", ctxMock).Return(nil)
 	rule2.On("Check", ctxMock).Return(nil)
 
-	// All should behave identically to And
 	allRule := All(rule1, rule2)
 	andRule := And(rule1, rule2)
 
@@ -289,7 +288,6 @@ func TestAny_IsAliasForOr(t *testing.T) {
 	rule1.On("Check", ctxMock).Return(nil)
 	rule2.On("Check", ctxMock).Maybe()
 
-	// Any should behave identically to Or
 	anyRule := Any(rule1, rule2)
 	orRule := Or(rule1, rule2)
 
