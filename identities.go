@@ -51,8 +51,8 @@ func (r *AnyIDRule) Check(ctx contractapi.TransactionContextInterface) error {
 	}
 
 	if slices.Contains(r.ids, id) {
-	return nil
-}
+		return nil
+	}
 
 	return NewAccessError(fmt.Sprintf("required one of IDs %v, got '%s'", r.ids, id))
 }
