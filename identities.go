@@ -56,3 +56,26 @@ func (r *AnyIDRule) Check(ctx contractapi.TransactionContextInterface) error {
 
 	return NewAccessError(fmt.Sprintf("required one of IDs %v, got '%s'", r.ids, id))
 }
+
+// AffiliationRule checks the caller's affiliation (hf.Affiliation attribute)
+type AffiliationRule struct {
+	affiliation string
+}
+
+// RequireAffiliation creates a rule to check for a specific affiliation
+func RequireAffiliation(affiliation string) *AffiliationRule {
+	return &AffiliationRule{affiliation: affiliation}
+}
+
+// Check checks the caller's affiliation
+func (r *AffiliationRule) Check(ctx contractapi.TransactionContextInterface) error {
+	identity := ctx.GetClientIdentity()
+	err := identity.AssertAttributeValue("hf.Affiliation", r.affiliation)
+	if err != nil {
+		return WrapAccessError(
+			fmt.Sprintf("required affiliation '%s'", r.affiliation), err,
+		)
+	}
+	return nil
+}
+
