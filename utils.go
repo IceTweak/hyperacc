@@ -122,17 +122,22 @@ func (r *HasAttributeRule) Check(ctx contractapi.TransactionContextInterface) er
 	return nil
 }
 
-// IsHLFAdmintRule checks if the caller is
+// IsHLFAdminRule checks if the caller is
 // an administrator in the HyperLedger Fabric network
-type IsHLFAdmintRule struct{}
+type IsHLFAdminRule struct{}
+
+// IsHLFAdmintRule checks if the caller is an administrator.
+//
+// Deprecated: Use IsHLFAdminRule instead.
+type IsHLFAdmintRule = IsHLFAdminRule
 
 // RequireHLFAdmin creates a rule to check that the caller is an administrator
-func RequireHLFAdmin() *IsHLFAdmintRule {
-	return &IsHLFAdmintRule{}
+func RequireHLFAdmin() *IsHLFAdminRule {
+	return &IsHLFAdminRule{}
 }
 
 // Check checks the caller type
-func (r *IsHLFAdmintRule) Check(ctx contractapi.TransactionContextInterface) error {
+func (r *IsHLFAdminRule) Check(ctx contractapi.TransactionContextInterface) error {
 	identity := ctx.GetClientIdentity()
 	err := identity.AssertAttributeValue("hf.Type", "admin")
 	if err != nil {
