@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"slices"
 
 	"github.com/hyperledger/fabric-contract-api-go/v2/contractapi"
 )
@@ -122,17 +123,55 @@ func (r *HasAttributeRule) Check(ctx contractapi.TransactionContextInterface) er
 	return nil
 }
 
-// IsHLFAdmintRule checks if the caller is
+// AnyAttributeRule checks for one of the specified attribute values
+type AnyAttributeRule struct {
+	name   string
+	values []string
+}
+
+// RequireAnyAttribute creates a rule to check that an attribute has one of the specified values
+func RequireAnyAttribute(name string, values ...string) *AnyAttributeRule {
+	return &AnyAttributeRule{
+		name:   name,
+		values: values,
+	}
+}
+
+// Check checks the attribute against the list of accepted values
+func (r *AnyAttributeRule) Check(ctx contractapi.TransactionContextInterface) error {
+	identity := ctx.GetClientIdentity()
+	attrValue, found, err := identity.GetAttributeValue(r.name)
+	if err != nil {
+		return fmt.Errorf("failed to get attribute '%s': %w", r.name, err)
+	}
+
+	if !found {
+		return NewAccessError(fmt.Sprintf("attribute '%s' not found", r.name))
+	}
+
+	if slices.Contains(r.values, attrValue) {
+		return nil
+	}
+
+	return NewAccessError(fmt.Sprintf("attribute '%s' has value '%s', expected one of %v", r.name, attrValue, r.values))
+}
+
+// IsHLFAdminRule checks if the caller is
 // an administrator in the HyperLedger Fabric network
-type IsHLFAdmintRule struct{}
+type IsHLFAdminRule struct{}
+
+// IsHLFAdmintRule checks if the caller is an administrator.
+//
+// Deprecated: Use IsHLFAdminRule instead.
+type IsHLFAdmintRule = IsHLFAdminRule
 
 // RequireHLFAdmin creates a rule to check that the caller is an administrator
-func RequireHLFAdmin() *IsHLFAdmintRule {
-	return &IsHLFAdmintRule{}
+func RequireHLFAdmin() *IsHLFAdminRule {
+	return &IsHLFAdminRule{}
 }
 
 // Check checks the caller type
-func (r *IsHLFAdmintRule) Check(ctx contractapi.TransactionContextInterface) error {
+func (r *IsHLFAdminRule) Check(ctx contractapi.TransactionContextInterface) error {
 	identity := ctx.GetClientIdentity()
 	err := identity.AssertAttributeValue("hf.Type", "admin")
 	if err != nil {
