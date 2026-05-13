@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2026-05-13
+
+### Added
+
+#### Identity-Based Access Control
+- **Enrollment ID Checks**: New `RequireID()` and `RequireAnyID()` rules to check the caller's enrollment ID from the Fabric certificate. Useful for per-user allow/deny and admin identity checks.
+- **Affiliation Checks**: New `RequireAffiliation()` rule to check the `hf.Affiliation` attribute. Enables org-subdivision based access control (e.g., `org1.department1`).
+- **Multi-Value Attribute Checks**: New `RequireAnyAttribute()` rule to check an attribute against multiple accepted values, completing the `RequireAny*` API symmetry.
+
+#### Declarative Policy Management
+- **PolicySet**: New `PolicySet` type for function-name based access control. Maps chaincode function names to access rules with support for default policies, per-function overrides, chainable API (`AddPolicy`/`RemovePolicy` return `*PolicySet`), and `Middleware()` for framework integration.
+
+#### Combinator Aliases
+- **All() / Any()**: Added `All()` and `Any()` aliases for `And()` and `Or()` combinators for more natural readability in policy declarations.
+
+#### Performance
+- **Benchmark Suite**: Added benchmarks covering single rule, And/Or combinators, complex nested rules, controller, helper function, and PolicySet evaluation paths.
+
+### Fixed
+- **AsAccessError clarity**: Refactored `AsAccessError()` return to use explicit two-step form (`ok := errors.As(...); return e, ok`) for unambiguous semantics.
+- **IsHLFAdmintRule typo**: Renamed to `IsHLFAdminRule`. The old name `IsHLFAdmintRule` is preserved as a deprecated type alias for backward compatibility.
+
 ## [0.1.0] - 2026-02-21
 
 ### Added
@@ -63,4 +85,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Known Issues
 - None reported for initial release
 
+[0.2.0]: https://github.com/IceTweak/hyperacc/releases/tag/v0.2.0
 [0.1.0]: https://github.com/IceTweak/hyperacc/releases/tag/v0.1.0
