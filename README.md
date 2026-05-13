@@ -1,9 +1,11 @@
 [![Go Reference](https://pkg.go.dev/badge/github.com/IceTweak/hyperacc.svg)](https://pkg.go.dev/github.com/IceTweak/hyperacc)
 [![Go Report Card](https://goreportcard.com/badge/github.com/IceTweak/hyperacc)](https://goreportcard.com/report/github.com/IceTweak/hyperacc)
-![Go Version](https://img.shields.io/badge/go%20version-%3E=1.21-61CFDD.svg?style=flat-square)
+![Go Version](https://img.shields.io/badge/go%20version-%3E=1.23-61CFDD.svg?style=flat-square)
 [![CI](https://github.com/IceTweak/hyperacc/workflows/CI/badge.svg)](https://github.com/IceTweak/hyperacc/actions?query=workflow%3ACI)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Release](https://img.shields.io/github/release/IceTweak/hyperacc.svg)](https://github.com/IceTweak/hyperacc/releases/latest)
+
+> **Latest Release**: [v0.2.0](https://github.com/IceTweak/hyperacc/releases/tag/v0.2.0)
 
 # 🔐 hyperacc
 Flexible and convenient package for access control to chaincode methods in HyperLedger Fabric.
