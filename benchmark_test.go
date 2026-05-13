@@ -11,7 +11,7 @@ func BenchmarkCheckAccess_SingleRule(b *testing.B) {
 	rule := RequireMSPID("Org1MSP")
 	b.ResetTimer()
 
-	for b.Loop() {
+	for i := 0; i < b.N; i++ {
 		_ = rule.Check(ctxMock)
 	}
 
@@ -27,7 +27,7 @@ func BenchmarkCheckAccess_AndCombinator(b *testing.B) {
 	rule := All(RequireRole("admin"), RequireMSPID("Org1MSP"))
 	b.ResetTimer()
 
-	for b.Loop() {
+	for i := 0; i < b.N; i++ {
 		_ = rule.Check(ctxMock)
 	}
 
@@ -42,7 +42,7 @@ func BenchmarkCheckAccess_OrCombinator(b *testing.B) {
 	rule := Any(RequireMSPID("Org1MSP"), RequireMSPID("Org2MSP"))
 	b.ResetTimer()
 
-	for b.Loop() {
+	for i := 0; i < b.N; i++ {
 		_ = rule.Check(ctxMock)
 	}
 
@@ -61,7 +61,7 @@ func BenchmarkCheckAccess_ComplexNested(b *testing.B) {
 	)
 	b.ResetTimer()
 
-	for b.Loop() {
+	for i := 0; i < b.N; i++ {
 		_ = rule.Check(ctxMock)
 	}
 
@@ -76,7 +76,7 @@ func BenchmarkCheckAccess_Controller(b *testing.B) {
 	controller := New(RequireMSPID("Org1MSP"))
 	b.ResetTimer()
 
-	for b.Loop() {
+	for i := 0; i < b.N; i++ {
 		_ = controller.Check(ctxMock)
 	}
 
@@ -90,7 +90,7 @@ func BenchmarkCheckAccess_Helper(b *testing.B) {
 
 	b.ResetTimer()
 
-	for b.Loop() {
+	for i := 0; i < b.N; i++ {
 		_ = CheckAccess(ctxMock, RequireMSPID("Org1MSP"))
 	}
 
@@ -106,7 +106,7 @@ func BenchmarkCheckAccess_PolicySet(b *testing.B) {
 	ps.AddPolicy("CreateAsset", RequireRole("admin"))
 	b.ResetTimer()
 
-	for b.Loop() {
+	for i := 0; i < b.N; i++ {
 		_ = ps.Check(ctxMock, "CreateAsset")
 	}
 
