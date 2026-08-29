@@ -128,7 +128,7 @@ jobs:
           mv govulncheck-results-clean.sarif govulncheck-results.sarif
 
       - name: Upload govulncheck results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v4.37.3
+        uses: github/codeql-action/upload-sarif@v4.37.9
         if: always()
         with:
           sarif_file: govulncheck-results.sarif
@@ -150,7 +150,7 @@ jobs:
           mv gosec-results-clean.sarif gosec-results.sarif
 
       - name: Upload gosec results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v4.37.3
+        uses: github/codeql-action/upload-sarif@v4.37.9
         if: always()
         with:
           sarif_file: gosec-results.sarif
@@ -180,7 +180,7 @@ jobs:
           cache: true
 
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v4.37.3
+        uses: github/codeql-action/init@v4.37.9
         with:
           languages: ${{ matrix.language }}
           queries: +security-and-quality
@@ -189,7 +189,7 @@ jobs:
         run: go build ./...
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v4.37.3
+        uses: github/codeql-action/analyze@v4.37.9
         with:
           category: "/language:${{matrix.language}}"
 
@@ -260,7 +260,7 @@ jobs:
         continue-on-error: true
 
       - name: Upload Grype results to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v4.37.3
+        uses: github/codeql-action/upload-sarif@v4.37.9
         if: always()
         with:
           sarif_file: grype-results.sarif
